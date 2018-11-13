@@ -15,11 +15,13 @@ const persons = [
     }
   ]
 const groupBy = (arr, prop) => {
+  const type = typeof prop
   let results =  arr.reduce((carry, item) => {
-    if (!(item[prop] in carry)) {
-      carry[item[prop]] = [item];
+    const key = type === 'function' ? prop(item) : item[prop];
+    if (!(key in carry)) {
+      carry[key] = [item];
     } else {
-      carry[item[prop]].push(item);
+      carry[key].push(item);
     }
     return carry;
   }, {})
@@ -41,5 +43,4 @@ assert.deepStrictEqual(groupBy(persons, "lastName"), {Dalton: [
           lastName: "Picsou"
         }]});
 
-//_.groupBy([6.1, 4.2, 6.3], Math.floor);
-// => { '4': [4.2], '6': [6.1, 6.3] }
+assert.deepStrictEqual(groupBy([6.1, 4.2, 6.3], Math.floor), { '4': [4.2], '6': [6.1, 6.3] });
